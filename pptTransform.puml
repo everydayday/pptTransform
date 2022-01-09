@@ -1,0 +1,43 @@
+@startuml
+
+
+
+actor User
+
+User <- Menu : 안내사항
+User -> Menu : 시작하기
+User -> Menu : 가사 입력
+User -> Menu : 폰트, 크기, 색상 선택
+
+loop  생성하기
+    alt 저장하기
+        Menu -> lyrics : 가사저장(str로)
+
+
+    else 미리보기
+
+        Menu -> slide : 가사전달
+        slide -> slide : 슬라이드 생성\n(리스트 생성:\\n기준),\n(문단 가다듬기)
+
+        slide -> jpeg : 슬라이드 전달
+        jpeg -> jpeg : jpeg 생성
+        jpeg -> Menu : jpeg 전달
+        jpeg -> jpeg : jpeg 삭제
+
+    else 생성하기
+        Menu -> slide : 가사전달
+        slide -> slide : 슬라이드 생성(리스트 생성,\n문단 가다듬기)
+        slide -> save : 슬라이드 전달
+        save -> save : 저장
+
+        end
+end
+
+Menu -> User : 파일 이름을 알려주세요
+User -> Menu : 파일 이름 전달
+Menu -> save : 파일 이름 전달
+
+
+
+
+@enduml
