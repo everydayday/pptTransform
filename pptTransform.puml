@@ -21,7 +21,7 @@ loop  생성하기
 
         slide -> jpeg : 슬라이드 전달
         jpeg -> jpeg : jpeg 생성
-        jpeg -> Menu : jpeg 전달
+        jpeg -> Menu : jpeg 전달\n(알집같은 새로운 프로그래므로 열림)
         jpeg -> jpeg : jpeg 삭제
 
     else 생성하기
