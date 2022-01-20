@@ -3,7 +3,9 @@ from PyQt5.QtWidgets import *
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
-
+from Slide.slidemain import slide_main
+from Slide import slidemain
+global got_lyric_str
 
 class MyApp(QWidget):
 
@@ -65,7 +67,12 @@ class MyApp(QWidget):
 
     def button1Function(self) :
         print(self.le.toPlainText())
+        global got_lyric_str
+        got_lyric_str = self.le.toPlainText()
         widget.setCurrentIndex(widget.currentIndex() + 1)
+        slide_main(got_lyric_str)
+
+
 
 
 class MyApp2(QWidget):
@@ -78,7 +85,7 @@ class MyApp2(QWidget):
         self.setWindowIcon(QIcon("D:\바탕화면\web.png"))
         self.resize(800, 400)
 
-        self.lbl_titlea = QLabel('PPT 변환기~!!!!!!')
+        self.lbl_titlea = QLabel('다음 페이지 입니다.')
         self.lbl_titlea.setStyleSheet("color: black;"
                                      "border-style: solid;"
                                      "border-width: 2px;"
@@ -94,6 +101,23 @@ class MyApp2(QWidget):
         self.setLayout(self.layout)
 
 
+def main():
+    app = QApplication(sys.argv)
+
+    # 화면 전환용 Widget 설정
+    widget = QtWidgets.QStackedWidget()
+
+    # 레이아웃 인스턴스 생성
+    myApp = MyApp()
+    myApp2 = MyApp2()
+
+    # Widget 추가
+    widget.addWidget(myApp)
+    widget.addWidget(myApp2)
+    widget.show()
+
+    ex = MyApp()
+    sys.exit(app.exec_())
 
 
 if __name__ == '__main__':
@@ -106,12 +130,12 @@ if __name__ == '__main__':
     myApp = MyApp()
     myApp2 = MyApp2()
 
-    #Widget 추가
+    # Widget 추가
     widget.addWidget(myApp)
     widget.addWidget(myApp2)
     widget.show()
 
-
-
     ex = MyApp()
     sys.exit(app.exec_())
+
+

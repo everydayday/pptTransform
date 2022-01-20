@@ -1,6 +1,6 @@
 from pptx import Presentation  # 라이브러리
 from pptx.util import Pt
-from get_lyrics import get_lyrics
+#from get_lyrics import get_lyrics
 from math import ceil # slide 갯수구하기 by 올림
 from comtypes.client import Constants, CreateObject
 import os
@@ -86,31 +86,36 @@ def save_pptx_as_png(png_foldername, pptx_filename, overwrite_folder: bool = Fal
 
 '''
 
-if __name__ == '__main__':
+
+def slide_main(lyrics):
+
     # 폰트 크기, 스타일 입력
     while True:
-        try: # 잘못입력했을 시
+        try:  # 잘못입력했을 시
             size = input("원하는 폰트 사이즈를 입력해주세요 : ")
             style = input("원하는 폰트 스타일을 입력해주세요 : ")
 
-            if size == '': # 디폴트 값
-                 font_size = 30
-            else: # 주어진 값 있을 시
+            if size == '':  # 디폴트 값
+                font_size = 30
+            else:  # 주어진 값 있을 시
                 font_size = int(size)
-            if style == '': # 디폴트 값
+            if style == '':  # 디폴트 값
                 font_style = '함초름돋음'
-            else: ## 이상한 폰트 입력해도 입력이 된다는 문제점 ##
+            else:  ## 이상한 폰트 입력해도 입력이 된다는 문제점 ##
                 font_style = style
-            break # 오류 없으면 while문 넘어가기
-        except ValueError: # 숫자가 아닌 값 입력 시
+            break  # 오류 없으면 while문 넘어가기
+        except ValueError:  # 숫자가 아닌 값 입력 시
             print("잘못된 값을 입력했습니다.")
             print("처음부터 다시 입력하세요.")
 
-
-
-    lyric_str = get_lyrics()
+    lyric_str = lyrics
     make_slide(lyric_str, font_size, font_style)
-    #save_pptx_as_png('all_slides_to_png','C:/Users/김대희/PycharmProjects/pythonProject2/Slide/add all slides1.pptx')
+    # save_pptx_as_png('all_slides_to_png','C:/Users/김대희/PycharmProjects/pythonProject2/Slide/add all slides1.pptx')
     png_folder = 'C:/Users/김대희/PycharmProjects/pythonProject2/Slide'
-    pptx_file ='C:/Users/김대희/PycharmProjects/pythonProject2/Slide/add all slides1.pptx'
-    #utils.save_pptx_as_png(png_folder, pptx_file)
+    pptx_file = 'C:/Users/김대희/PycharmProjects/pythonProject2/Slide/add all slides1.pptx'
+    # utils.save_pptx_as_png(png_folder, pptx_file)
+
+
+if __name__ == '__main__':
+    slide_main()
+
