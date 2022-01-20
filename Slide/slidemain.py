@@ -11,11 +11,26 @@ import os
 
 def get_slide_num(lyric_str):
     slide_num = ceil(len(lyric_str) / 2)
+    print(lyric_str.count('\n'))
     return slide_num
 
 
 # slide_str 만들기 / index : 슬라이드마다 들어가는 가사 두줄
 def get_slide_str(lyric_str) :
+    #print(lyric_str)
+    my_list = lyric_str.split('\n')
+    slide_list = []
+    idx_count = 0
+
+    for idx, value in enumerate(my_list):
+
+        if idx % 2 == 0:
+            slide_list.append(value)
+        else:
+            slide_list[idx_count] = slide_list[idx_count] + "\n" + value
+            idx_count += 1
+
+    return slide_list
     slide_str = []
     slide_num = get_slide_num(lyric_str)
     '''
@@ -45,7 +60,8 @@ def make_slide(lyric_str ,font_size = 30, font_style = '함초름돋음'):    # 
     # slide 마다 가사 리스트
     slide_str = get_slide_str(lyric_str)
     # slide 갯수 구하기 (올림)
-    slide_num = ceil(len(lyric_str) / 2)
+    slide_num = len(slide_str)
+    #slide_num = ceil(len(lyric_str) / 2)
     # slide 만들기
     for i in range(0, slide_num):
         title_slide_layout = prs.slide_layouts[0]  # 슬라이드 종류 선택
@@ -60,6 +76,7 @@ def make_slide(lyric_str ,font_size = 30, font_style = '함초름돋음'):    # 
         print(content.text)
         print("----------------------------")
         #title.text_frame.paragraphs[1].font.name = font_style #paragraph : 단락/행/엔터기준 구분
+        print("here!!!!!!!!!")
         title.text_frame.paragraphs[0].font.size = Pt(font_size)
         #title.text_frame.paragraphs[1].font.size = Pt(font_size)
 
@@ -92,8 +109,8 @@ def slide_main(lyrics):
     # 폰트 크기, 스타일 입력
     while True:
         try:  # 잘못입력했을 시
-            size = input("원하는 폰트 사이즈를 입력해주세요 : ")
-            style = input("원하는 폰트 스타일을 입력해주세요 : ")
+            size = 30
+            style = "함초름돋음"
 
             if size == '':  # 디폴트 값
                 font_size = 30

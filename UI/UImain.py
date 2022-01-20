@@ -53,7 +53,6 @@ class MyApp(QWidget):
         self.btn_group_layout.addWidget(self.btn2)
 
         self.btn_group.setLayout(self.btn_group_layout)
-
         #  layout
         self.layout = QVBoxLayout()
         # 기준
@@ -99,6 +98,10 @@ class MyApp2(QWidget):
         self.layout.addWidget(self.lbl_titlea)
 
         self.setLayout(self.layout)
+
+
+
+
 
 
 def main():
