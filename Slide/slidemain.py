@@ -24,7 +24,7 @@ def get_slide_str(lyric_str) :
     '''
     for i in range(slide_num):
         try:
-            slide_str.append(lyric_str[i*2]  + lyric_str[i*2+1])
+            slide_str.append(lyric_str[i*2]  + lyric_str[i*2+1].replace("\n",""))
         except IndexError: # 가사줄의 갯수가 홀수여서 마지막에 str[i*2]까지만 해당할 시
             slide_str.append(lyric_str[i*2])
     
