@@ -17,19 +17,34 @@ def get_slide_num(lyric_str):
 
 # slide_str 만들기 / index : 슬라이드마다 들어가는 가사 두줄
 def get_slide_str(lyric_str) :
-    #print(lyric_str)
     my_list = lyric_str.split('\n')
     slide_list = []
     idx_count = 0
 
     for idx, value in enumerate(my_list):
+        if idx % 2 == 0 and value =='' :
+            my_list[idx] = '\n'
+            my_list.insert(idx+1,'\n')
 
-        if idx % 2 == 0:
-            slide_list.append(value)
+    print("here is my_list", my_list)
+    for idx, value in enumerate(my_list):
+
+        if  idx % 2 == 0:    # 괜히 try문 안 쓰는게 나을 듯.
+            if value == '':
+                slide_list.append('\n')
+                slide_list.append('\n')
+                idx_count += 1
+            else:
+                slide_list.append(value)
         else:
-            slide_list[idx_count] = slide_list[idx_count] + "\n" + value
-            idx_count += 1
+            if value == '\n':
+                slide_list[idx_count] = slide_list[idx_count] + value
+                idx_count += 1 # 이렇게 하는 방법을 생각 못 했어
+            else:
+                slide_list[idx_count] = slide_list[idx_count] + "\n" + value    # 이렇게 하는 방법을 생각 못 했어
+                idx_count += 1
 
+    print("here is slide list \n",slide_list)
     return slide_list
     slide_str = []
     slide_num = get_slide_num(lyric_str)
@@ -44,11 +59,6 @@ def get_slide_str(lyric_str) :
             slide_str.append(lyric_str[i*2])
     
     return slide_str
-
-
-
-# 창이 열리고
-# 가사 입력
 
 
 
@@ -76,7 +86,6 @@ def make_slide(lyric_str ,font_size = 30, font_style = '함초름돋음'):    # 
         print(content.text)
         print("----------------------------")
         #title.text_frame.paragraphs[1].font.name = font_style #paragraph : 단락/행/엔터기준 구분
-        print("here!!!!!!!!!")
         title.text_frame.paragraphs[0].font.size = Pt(font_size)
         #title.text_frame.paragraphs[1].font.size = Pt(font_size)
 
