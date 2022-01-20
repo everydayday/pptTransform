@@ -4,7 +4,7 @@ from get_lyrics import get_lyrics
 from math import ceil # slide 갯수구하기 by 올림
 from comtypes.client import Constants, CreateObject
 import os
-from pptx_tools import utils
+#from pptx_tools import utils
 
 
 
@@ -26,7 +26,7 @@ def get_slide_str(lyric_str) :
         try:
             slide_str.append(lyric_str[i*2]  + lyric_str[i*2+1])
         except IndexError: # 가사줄의 갯수가 홀수여서 마지막에 str[i*2]까지만 해당할 시
-            slide_str.append(lyric_str[i*2]  )
+            slide_str.append(lyric_str[i*2])
     
     return slide_str
 
@@ -113,4 +113,4 @@ if __name__ == '__main__':
     #save_pptx_as_png('all_slides_to_png','C:/Users/김대희/PycharmProjects/pythonProject2/Slide/add all slides1.pptx')
     png_folder = 'C:/Users/김대희/PycharmProjects/pythonProject2/Slide'
     pptx_file ='C:/Users/김대희/PycharmProjects/pythonProject2/Slide/add all slides1.pptx'
-    utils.save_pptx_as_png(png_folder, pptx_file)
+    #utils.save_pptx_as_png(png_folder, pptx_file)
