@@ -4,7 +4,6 @@ from PyQt5 import QtWidgets
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from Slide.slidemain import slide_main
-from Slide import slidemain
 global got_lyric_str
 
 class MyApp(QWidget):

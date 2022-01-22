@@ -1,9 +1,10 @@
 from pptx import Presentation  # 라이브러리
-from pptx.util import Pt
+from pptx.util import Pt, Inches, Cm
 #from get_lyrics import get_lyrics
 from math import ceil # slide 갯수구하기 by 올림
 from comtypes.client import Constants, CreateObject
 import os
+import win32com.client
 #from pptx_tools import utils
 
 
@@ -39,9 +40,9 @@ def get_slide_str(lyric_str) :
         else:
             if value == '\n':
                 slide_list[idx_count] = slide_list[idx_count] + value
-                idx_count += 1 # 이렇게 하는 방법을 생각 못 했어
+                idx_count += 1
             else:
-                slide_list[idx_count] = slide_list[idx_count] + "\n" + value    # 이렇게 하는 방법을 생각 못 했어
+                slide_list[idx_count] = slide_list[idx_count] + "\n" + value
                 idx_count += 1
 
     print("here is slide list \n",slide_list)
@@ -74,29 +75,52 @@ def make_slide(lyric_str ,font_size = 30, font_style = '함초름돋음'):    # 
     #slide_num = ceil(len(lyric_str) / 2)
     # slide 만들기
     for i in range(0, slide_num):
-        title_slide_layout = prs.slide_layouts[0]  # 슬라이드 종류 선택
-        slide = prs.slides.add_slide(title_slide_layout)  # 슬라이드 추가
-        content = slide.placeholders[0]
-        content.text = slide_str[i]
-        title = prs.slides[i].shapes.title
-        p = title.text_frame.paragraphs[0]
-        run = p.add_run()
+        blank_slide_layout = prs.slide_layouts[6]  # 슬라이드 종류 선택
+        slide = prs.slides.add_slide(blank_slide_layout)  # 슬라이드 추가
 
-        title.text_frame.paragraphs[0].font.name = font_style
-        print(content.text)
+        '''left = Inches(1)
+
+        top = Inches(1)
+
+        width = Inches(5)
+
+        height = Inches(0.5)'''
+        # 위치, 가로/세로 길이
+        left = Cm(1.91)
+        
+        top = Cm(7.46)
+        width = Cm(4.08)
+        height = Cm(21.59)
+
+        tb = slide.shapes.add_textbox(left, top, width, height)
+        tf = tb.text_frame
+        tf.text = slide_str[i]
+        tf.paragraphs[0].font.name = font_style
+        tf.paragraphs[0].font.size = Pt(font_size)
+
+
+        #title = prs.slides[i].shapes.title
+        # content = slide.placeholders[0]
+        # content.text = slide_str[i]
+        #p = title.text_frame.paragraphs[0]
+        #run = p.add_run()
+
+        #title.text_frame.paragraphs[0].font.name = font_style
+        print(tf.text)
         print("----------------------------")
         #title.text_frame.paragraphs[1].font.name = font_style #paragraph : 단락/행/엔터기준 구분
-        title.text_frame.paragraphs[0].font.size = Pt(font_size)
+        #title.text_frame.paragraphs[0].font.size = Pt(font_size)
         #title.text_frame.paragraphs[1].font.size = Pt(font_size)
 
+    print("before prs.save")
     prs.save('add all slides1.pptx')
 
 
 
 
-''' image 저장
-def save_pptx_as_png(png_foldername, pptx_filename, overwrite_folder: bool = False):
-    if os.path.isdir(png_foldername) and not overwrite_folder:
+#image 저장
+def save_pptx_as_png():
+    '''if os.path.isdir(png_foldername) and not overwrite_folder:
         print(f"Folder {png_foldername} already exists. "
               f"Set overwrite_folder=True, if you want to overwrite folder content.")
         return
@@ -109,8 +133,13 @@ def save_pptx_as_png(png_foldername, pptx_filename, overwrite_folder: bool = Fal
     pres.close()
     if powerpoint.Presentations.Count == 0:  # only close, when no other Presentations are open!
         powerpoint.quit()
-
 '''
+    Application = win32com.client.Dispatch("PowerPoint.Application")
+    Presentation = Application.Presentations.Open(r"C:\Users\김대희\PycharmProjects\pythonProject2\UI\add all slides1.pptx")
+    Presentation.Slides[0].Export(r"C:\Users\김대희\Pictures\pythonjpg\pptimage.jpg", "JPG")
+    Application.Quit()
+    Presentation = None
+    Application = None
 
 
 def slide_main(lyrics):
@@ -136,9 +165,9 @@ def slide_main(lyrics):
 
     lyric_str = lyrics
     make_slide(lyric_str, font_size, font_style)
-    # save_pptx_as_png('all_slides_to_png','C:/Users/김대희/PycharmProjects/pythonProject2/Slide/add all slides1.pptx')
-    png_folder = 'C:/Users/김대희/PycharmProjects/pythonProject2/Slide'
-    pptx_file = 'C:/Users/김대희/PycharmProjects/pythonProject2/Slide/add all slides1.pptx'
+    save_pptx_as_png()
+    #png_folder = 'C:/Users/김대희/PycharmProjects/pythonProject2/Slide'
+    #pptx_file = 'C:/Users/김대희/PycharmProjects/pythonProject2/Slide/add all slides1.pptx'
     # utils.save_pptx_as_png(png_folder, pptx_file)
 
 
