@@ -11,7 +11,6 @@ from pptx.util import Pt, Cm
 
 def get_slide_num(lyric_str):
     slide_num = ceil(len(lyric_str) / 2)
-    print("here is get_slide_num def")
     print(lyric_str.count('\n'))
     return slide_num
 
@@ -27,10 +26,9 @@ def get_slide_str(lyric_str):
             my_list[idx] = '\n'
             my_list.insert(idx + 1, '\n')
 
-    print("here is my_list", my_list)
     for idx, value in enumerate(my_list):
 
-        if idx % 2 == 0:  # 괜히 try문 안 쓰는게 나을 듯.
+        if idx % 2 == 0:
             if value == '':
                 slide_list.append('\n')
                 slide_list.append('\n')
@@ -72,19 +70,13 @@ def make_slide(lyric_str, font_size=30, font_style='함초름돋음'):  # slide_
     # slide 갯수 구하기 (올림)
     global slide_num
     slide_num = len(slide_str)
+    print("Here is slide_num in make_slide:",slide_num)
     # slide_num = ceil(len(lyric_str) / 2)
     # slide 만들기
     for i in range(0, slide_num):
         blank_slide_layout = prs.slide_layouts[6]  # 슬라이드 종류 선택
         slide = prs.slides.add_slide(blank_slide_layout)  # 슬라이드 추가
 
-        '''left = Inches(1)
-
-        top = Inches(1)
-
-        width = Inches(5)
-
-        height = Inches(0.5)'''
         # 위치, 가로/세로 길이
         left = Cm(1.91)
 
@@ -111,7 +103,6 @@ def make_slide(lyric_str, font_size=30, font_style='함초름돋음'):  # slide_
         # title.text_frame.paragraphs[0].font.size = Pt(font_size)
         # title.text_frame.paragraphs[1].font.size = Pt(font_size)
 
-    print("before prs.save")
     prs.save('add all slides1.pptx')
 
 
@@ -132,17 +123,11 @@ def save_pptx_as_png():
         powerpoint.quit()'''
     Application = win32com.client.Dispatch("PowerPoint.Application")
     Presentation = Application.Presentations.Open(r"C:\Users\김대희\PycharmProjects\pythonProject2\UI\add all slides1.pptx")
-    i = 0
 
-    print("before global slide_num")
 
-    print("number of slide_num",slide_num)
-    '''
     for i in range(slide_num):
-        Presentation.Slides[i].Export(r"C:Users\김대희\PycharmProjects\pythonProject2\slideImagefolder\pptimage{}.jpg".format(i), "JPG")
-    '''
+        Presentation.Slides[i].Export(r"C:\Users\김대희\PycharmProjects\pythonProject2\slideImagefolder\pptimage{}.jpg".format(i), "JPG")
 
-    #Presentation.Slides[0].Export(r"C:\Users\김대희\PycharmProjects\pythonProject2\slideImagefolder\pptimage{}.jpg".format(0), "JPG")
 
     Application.Quit()
     Presentation = None
