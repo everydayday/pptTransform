@@ -31,6 +31,17 @@ class MyApp(QWidget):
                                      "border-radius: 3px")
         self.lbl_title.setAlignment(Qt.AlignCenter)  # 가운데 맞춤
 
+        # QLabel 설명문
+        self.lbl_paragraph = QLabel(\
+"* 이 프로그램은 입력된 내용을 ppt로 변환해 주는 프로그램입니다.\n\
+* 가사의 문단과 문단 사이는 빈 페이지가 생성 됩니다.\n\
+* 필요 이상의 빈 페이지가 생성되는걸 방지하기 위해\n\
+  문단과 문단 사이 빈 줄은 한 줄 이상 되지 않도록 해주세요." )
+        #self.lbl_paragraph.setAlignment(Qt.AlignCenter)
+        para_font = self.lbl_paragraph.font()
+        para_font.setPointSize(15)
+        para_font.setFamily("맑은 고딕")
+
         # QTextBrowser를 생성한다.
         self.le = QTextEdit()
         # QTextBrowser의 자리표지자를 지정한다
@@ -50,12 +61,14 @@ class MyApp(QWidget):
         self.btn_group_layout = QHBoxLayout()
         self.btn_group_layout.addWidget(self.btn1)
         self.btn_group_layout.addWidget(self.btn2)
-
         self.btn_group.setLayout(self.btn_group_layout)
-        #  layout
+
+
+        ##  layout
         self.layout = QVBoxLayout()
-        # 기준
+
         self.layout.addWidget(self.lbl_title)
+        self.layout.addWidget(self.lbl_paragraph)
         self.layout.addWidget(self.le)
         self.layout.addWidget(self.btn_group)
 
@@ -83,6 +96,50 @@ class MyApp2(QWidget):
         self.setWindowIcon(QIcon("D:\바탕화면\web.png"))
         self.resize(800, 400)
 
+
+
+        # combobox
+        self.cb1_text = QLabel('글꼴')
+        self.cb1 = QComboBox()
+        self.cb1.addItem('궁서체')
+        self.cb1.addItem('굴림체')
+        self.cb1.addItem('돋음체')
+
+        self.cb2_text = QLabel('크기')
+        self.cb2 = QComboBox()
+        self.cb2.addItem('10')
+        self.cb2.addItem('15')
+        self.cb2.addItem('20')
+
+        self.cb3_text = QLabel('색상')
+        self.cb3 = QComboBox()
+        self.cb3.addItem('red')
+        self.cb3.addItem('blue')
+        self.cb3.addItem('white')
+        self.cb3.addItem('black')
+
+
+        # Label group
+        self.cb_text_group = QGroupBox()
+        self.cb_text_group_layout = QHBoxLayout()
+
+        self.cb_text_group_layout.addWidget(self.cb1_text)
+        self.cb_text_group_layout.addWidget(self.cb2_text)
+        self.cb_text_group_layout.addWidget(self.cb3_text)
+        self.cb_text_group.setLayout(self.cb_text_group_layout)
+
+        # combo group
+        self.cb_group = QGroupBox()
+        self.cb_group_layout = QHBoxLayout()
+
+        self.cb_group_layout.addWidget(self.cb1)
+        self.cb_group_layout.addWidget(self.cb2)
+        self.cb_group_layout.addWidget(self.cb3)
+        self.cb_group.setLayout(self.cb_group_layout)
+
+
+
+
         self.lbl_titlea = QLabel('다음 페이지 입니다.')
         self.lbl_titlea.setStyleSheet("color: black;"
                                      "border-style: solid;"
@@ -94,6 +151,8 @@ class MyApp2(QWidget):
         #  layout
         self.layout = QVBoxLayout()
         # 기준
+        self.layout.addWidget(self.cb_text_group)
+        self.layout.addWidget(self.cb_group)
         self.layout.addWidget(self.lbl_titlea)
 
         self.setLayout(self.layout)

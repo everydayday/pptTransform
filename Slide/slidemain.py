@@ -4,6 +4,7 @@ from math import ceil  # slide 갯수구하기 by 올림
 import win32com.client
 from pptx import Presentation  # 라이브러리
 from pptx.util import Pt, Cm
+from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 
 
 # from pptx_tools import utils
@@ -78,15 +79,16 @@ def make_slide(lyric_str, font_size=30, font_style='함초름돋음'):  # slide_
         slide = prs.slides.add_slide(blank_slide_layout)  # 슬라이드 추가
 
         # 위치, 가로/세로 길이
-        left = Cm(1.91)
-
-        top = Cm(7.46)
-        width = Cm(4.08)
-        height = Cm(21.59)
+        left = Cm(0)
+        top = Cm(0)
+        width = Cm(25.4)
+        height = Cm(18.21)
 
         tb = slide.shapes.add_textbox(left, top, width, height)
         tf = tb.text_frame
         tf.text = slide_str[i]
+        tf.vertical_anchor = MSO_ANCHOR.MIDDLE  # TOP 부분만 나와서 MIDDLE 찍었는데 이게 되네...
+        tf.paragraphs[0].alignment = PP_ALIGN.CENTER
         tf.paragraphs[0].font.name = font_style
         tf.paragraphs[0].font.size = Pt(font_size)
 
