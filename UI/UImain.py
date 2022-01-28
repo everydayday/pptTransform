@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
-from Slide.slidemain import slide_main
+from Slide.slidemain import slide_main # ppt 생성 이미지 만듬
 global got_lyric_str
 
 class MyApp(QWidget):
@@ -13,6 +13,7 @@ class MyApp(QWidget):
         self.initUI()
 
         self.btn1.clicked.connect(self.button1Function)
+        self.btn2.clicked.connect(self.button2Function)
 
     def initUI(self):
         # 창 Title, Icon 설정
@@ -54,7 +55,7 @@ class MyApp(QWidget):
         self.btn1 = QPushButton('미리보기')
         self.btn1.resize(100, 100)
 
-        self.btn2 = QPushButton('생성하기')
+        self.btn2 = QPushButton('초기화')
         self.btn2.resize(100, 100)
 
         # btn layout
@@ -83,13 +84,17 @@ class MyApp(QWidget):
         widget.setCurrentIndex(widget.currentIndex() + 1)
         slide_main(got_lyric_str)
 
-
+    def button2Function(self) :
+        self.le.clear()
 
 
 class MyApp2(QWidget):
     def __init__(self):
         super().__init__()
         self.initUI()
+
+        self.btn1.clicked.connect(self.btn1Function)
+        self.btn2.clicked.connect(self.btn2Function)
 
     def initUI(self):
         self.setWindowTitle('PPT 변환기')
@@ -132,6 +137,7 @@ class MyApp2(QWidget):
         self.cb_group = QGroupBox()
         self.cb_group_layout = QHBoxLayout()
 
+
         self.cb_group_layout.addWidget(self.cb1)
         self.cb_group_layout.addWidget(self.cb2)
         self.cb_group_layout.addWidget(self.cb3)
@@ -148,15 +154,39 @@ class MyApp2(QWidget):
                                      "border-color: #26C5A5;"
                                      "border-radius: 3px")
 
+        # btn 그룹
+        self.btn_group = QGroupBox()
+
+        # btn 추가
+        self.btn1 = QPushButton('뒤로가기')
+        self.btn1.resize(100, 100)
+
+        self.btn2 = QPushButton('생성하기')
+        self.btn2.resize(100, 100)
+
+        # btn layout
+        self.btn_group_layout = QHBoxLayout()
+        self.btn_group_layout.addWidget(self.btn1)
+        self.btn_group_layout.addWidget(self.btn2)
+        self.btn_group.setLayout(self.btn_group_layout)
+
         #  layout
         self.layout = QVBoxLayout()
         # 기준
         self.layout.addWidget(self.cb_text_group)
         self.layout.addWidget(self.cb_group)
         self.layout.addWidget(self.lbl_titlea)
+        self.layout.addWidget(self.btn_group)
+
 
         self.setLayout(self.layout)
 
+    def btn1Function(self):
+        widget.setCurrentIndex(widget.currentIndex() - 1)
+
+
+    def btn2Function(self):
+        self.le.clear()
 
 
 

@@ -82,7 +82,7 @@ def make_slide(lyric_str, font_size=30, font_style='함초름돋음'):  # slide_
         left = Cm(0)
         top = Cm(0)
         width = Cm(25.4)
-        height = Cm(18.21)
+        height = Cm(19)
 
         tb = slide.shapes.add_textbox(left, top, width, height)
         tf = tb.text_frame
