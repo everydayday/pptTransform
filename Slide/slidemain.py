@@ -69,15 +69,19 @@ def make_slide(lyric_str, font_size=30, font_style='함초름돋음'):  # slide_
     # slide 마다 가사 리스트
     slide_str = get_slide_str(lyric_str)
     # slide 갯수 구하기 (올림)
+
     global slide_num
     slide_num = len(slide_str)
     print("Here is slide_num in make_slide:",slide_num)
     # slide_num = ceil(len(lyric_str) / 2)
     # slide 만들기
-    for i in range(0, slide_num):
-        blank_slide_layout = prs.slide_layouts[6]  # 슬라이드 종류 선택
-        slide = prs.slides.add_slide(blank_slide_layout)  # 슬라이드 추가
 
+    for i in range(0, slide_num):
+
+        blank_slide_layout = prs.slide_layouts[6]  # 슬라이드 종류 선택
+
+        slide = prs.slides.add_slide(blank_slide_layout)  # 슬라이드 추가
+    
         # 위치, 가로/세로 길이
         left = Cm(0)
         top = Cm(0)
@@ -110,20 +114,8 @@ def make_slide(lyric_str, font_size=30, font_style='함초름돋음'):  # slide_
 
 # image 저장
 def save_pptx_as_png():
-    '''if os.path.isdir(png_foldername) and not overwrite_folder:
-        print(f"Folder {png_foldername} already exists. "
-              f"Set overwrite_folder=True, if you want to overwrite folder content.")
-        return
-
-    powerpoint = CreateObject("Powerpoint.Application")
-    pp_constants = Constants(powerpoint)
-
-    pres = powerpoint.Presentations.Open(pptx_filename)
-    pres.SaveAs(png_foldername, pp_constants.ppSaveAsPNG)
-    pres.close()
-    if powerpoint.Presentations.Count == 0:  # only close, when no other Presentations are open!
-        powerpoint.quit()'''
     Application = win32com.client.Dispatch("PowerPoint.Application")
+    #Application.Visible = False    https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=new27kr&logNo=221020428184
     Presentation = Application.Presentations.Open(r"C:\Users\김대희\PycharmProjects\pythonProject2\UI\add all slides1.pptx")
 
 
@@ -136,27 +128,9 @@ def save_pptx_as_png():
     Application = None
 
 
-def slide_main(lyrics):
+def slide_main(lyric_str,font_size = 30 , font_style = '함초름돋움'):
     # 폰트 크기, 스타일 입력
-    while True:
-        try:  # 잘못입력했을 시
-            size = 30
-            style = "함초름돋음"
 
-            if size == '':  # 디폴트 값
-                font_size = 30
-            else:  # 주어진 값 있을 시
-                font_size = int(size)
-            if style == '':  # 디폴트 값
-                font_style = '함초름돋음'
-            else:  ## 이상한 폰트 입력해도 입력이 된다는 문제점 ##
-                font_style = style
-            break  # 오류 없으면 while문 넘어가기
-        except ValueError:  # 숫자가 아닌 값 입력 시
-            print("잘못된 값을 입력했습니다.")
-            print("처음부터 다시 입력하세요.")
-
-    lyric_str = lyrics
     make_slide(lyric_str, font_size, font_style)
     save_pptx_as_png()
     # png_folder = 'C:/Users/김대희/PycharmProjects/pythonProject2/Slide'

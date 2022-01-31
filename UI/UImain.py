@@ -4,6 +4,8 @@ from PyQt5 import QtWidgets
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from Slide.slidemain import slide_main # ppt 생성 이미지 만듬
+from alarmUI import MiniApp
+from UImain2 import MyApp2
 global got_lyric_str
 
 class MyApp(QWidget):
@@ -18,9 +20,10 @@ class MyApp(QWidget):
     def initUI(self):
         # 창 Title, Icon 설정
         self.setWindowTitle('PPT 변환기')
-        self.move(300, 300)
-        self.setWindowIcon(QIcon("D:\바탕화면\web.png"))
-        self.resize(800, 400)
+
+        self.move(0, 0)
+        self.setWindowIcon(QIcon(r"D:\바탕화면\web.png"))
+        self.resize(1600, 800)
 
         # QLabel 생성
         self.lbl_title = QLabel('PPT 변환기')
@@ -34,7 +37,7 @@ class MyApp(QWidget):
 
         # QLabel 설명문
         self.lbl_paragraph = QLabel(\
-"* 이 프로그램은 입력된 내용을 ppt로 변환해 주는 프로그램입니다.\n\
+"* 이 프로그램은 입력된 노래가사를 ppt로 변환해 주는 프로그램입니다.\n\
 * 가사의 문단과 문단 사이는 빈 페이지가 생성 됩니다.\n\
 * 필요 이상의 빈 페이지가 생성되는걸 방지하기 위해\n\
   문단과 문단 사이 빈 줄은 한 줄 이상 되지 않도록 해주세요." )
@@ -81,112 +84,27 @@ class MyApp(QWidget):
         print(self.le.toPlainText())
         global got_lyric_str
         got_lyric_str = self.le.toPlainText()
-        widget.setCurrentIndex(widget.currentIndex() + 1)
+        got_lyric_str.strip()
+        if got_lyric_str == '':
+            print("here is in if")
+            MiniApp()
+            widget.setCurrentIndex(widget.currentIndex())
+
         slide_main(got_lyric_str)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
 
     def button2Function(self) :
         self.le.clear()
 
 
-class MyApp2(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.initUI()
-
-        self.btn1.clicked.connect(self.btn1Function)
-        self.btn2.clicked.connect(self.btn2Function)
-
-    def initUI(self):
-        self.setWindowTitle('PPT 변환기')
-        self.setWindowIcon(QIcon("D:\바탕화면\web.png"))
-        self.resize(800, 400)
-
-
-
-        # combobox
-        self.cb1_text = QLabel('글꼴')
-        self.cb1 = QComboBox()
-        self.cb1.addItem('궁서체')
-        self.cb1.addItem('굴림체')
-        self.cb1.addItem('돋음체')
-
-        self.cb2_text = QLabel('크기')
-        self.cb2 = QComboBox()
-        self.cb2.addItem('10')
-        self.cb2.addItem('15')
-        self.cb2.addItem('20')
-
-        self.cb3_text = QLabel('색상')
-        self.cb3 = QComboBox()
-        self.cb3.addItem('red')
-        self.cb3.addItem('blue')
-        self.cb3.addItem('white')
-        self.cb3.addItem('black')
-
-
-        # Label group
-        self.cb_text_group = QGroupBox()
-        self.cb_text_group_layout = QHBoxLayout()
-
-        self.cb_text_group_layout.addWidget(self.cb1_text)
-        self.cb_text_group_layout.addWidget(self.cb2_text)
-        self.cb_text_group_layout.addWidget(self.cb3_text)
-        self.cb_text_group.setLayout(self.cb_text_group_layout)
-
-        # combo group
-        self.cb_group = QGroupBox()
-        self.cb_group_layout = QHBoxLayout()
-
-
-        self.cb_group_layout.addWidget(self.cb1)
-        self.cb_group_layout.addWidget(self.cb2)
-        self.cb_group_layout.addWidget(self.cb3)
-        self.cb_group.setLayout(self.cb_group_layout)
 
 
 
 
-        self.lbl_titlea = QLabel('다음 페이지 입니다.')
-        self.lbl_titlea.setStyleSheet("color: black;"
-                                     "border-style: solid;"
-                                     "border-width: 2px;"
-                                     "font: 30pt'맑은 고딕';"  # 글자 폰트 설정
-                                     "border-color: #26C5A5;"
-                                     "border-radius: 3px")
-
-        # btn 그룹
-        self.btn_group = QGroupBox()
-
-        # btn 추가
-        self.btn1 = QPushButton('뒤로가기')
-        self.btn1.resize(100, 100)
-
-        self.btn2 = QPushButton('생성하기')
-        self.btn2.resize(100, 100)
-
-        # btn layout
-        self.btn_group_layout = QHBoxLayout()
-        self.btn_group_layout.addWidget(self.btn1)
-        self.btn_group_layout.addWidget(self.btn2)
-        self.btn_group.setLayout(self.btn_group_layout)
-
-        #  layout
-        self.layout = QVBoxLayout()
-        # 기준
-        self.layout.addWidget(self.cb_text_group)
-        self.layout.addWidget(self.cb_group)
-        self.layout.addWidget(self.lbl_titlea)
-        self.layout.addWidget(self.btn_group)
 
 
-        self.setLayout(self.layout)
 
-    def btn1Function(self):
-        widget.setCurrentIndex(widget.currentIndex() - 1)
-
-
-    def btn2Function(self):
-        self.le.clear()
 
 
 
