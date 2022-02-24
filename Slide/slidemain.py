@@ -5,7 +5,9 @@ import win32com.client
 from pptx import Presentation  # 라이브러리
 from pptx.util import Pt, Cm
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
-
+from pptx.dml.color import ColorFormat, RGBColor
+from pptx.enum.shapes import MSO_SHAPE
+from pptx.util import Inches
 
 # from pptx_tools import utils
 
@@ -44,7 +46,6 @@ def get_slide_str(lyric_str):
                 slide_list[idx_count] = slide_list[idx_count] + "\n" + value
                 idx_count += 1
 
-    print("here is slide list \n", slide_list)
     return slide_list
     slide_str = []
     slide_num = get_slide_num(lyric_str)
@@ -63,31 +64,48 @@ def get_slide_str(lyric_str):
 
 # slide 생성
 # 가사만 주면 ok
-def make_slide(lyric_str, font_size=30, font_style='함초름돋음'):  # slide_str 아무 값도 없을 시, 오류 메시지 출력
-    # 파워포인트 객체 선언
+def make_slide(lyric_str, font_size=30, font_style='함초름돋음',font_col_rgb=(0,0,0), background_col_rgb = (0,0,0)):  # slide_str 아무 값도 없을 시, 오류 메시지 출력
+    # 파워포인트 객체 선언                                                       # font_col_rgb : tuple 로 넘겨줌
+    print("start in make_slide")
     prs = Presentation()
     # slide 마다 가사 리스트
     slide_str = get_slide_str(lyric_str)
     # slide 갯수 구하기 (올림)
-
     global slide_num
     slide_num = len(slide_str)
-    print("Here is slide_num in make_slide:",slide_num)
     # slide_num = ceil(len(lyric_str) / 2)
     # slide 만들기
-
     for i in range(0, slide_num):
-
         blank_slide_layout = prs.slide_layouts[6]  # 슬라이드 종류 선택
-
         slide = prs.slides.add_slide(blank_slide_layout)  # 슬라이드 추가
-    
-        # 위치, 가로/세로 길이
+
+        # 위치, 가로/세로 길이 - 텍스트 상자
         left = Cm(0)
         top = Cm(0)
         width = Cm(25.4)
         height = Cm(19)
 
+        # case 2
+        '''left = Cm(0)
+        top = Cm(2.89)
+        width = Cm(25.4)
+        height = Cm(6.63)'''
+
+        # https://vincinotes.com/%ED%8C%8C%EC%9D%B4%EC%8D%AC-%ED%8C%8C%EC%9B%8C%ED%8F%AC%EC%9D%B8%ED%8A%B8-%EC%9E%90%EB%8F%99%ED%99%94-python-pptx-%EB%A7%8C%EB%93%A4%EA%B8%B0/
+        # 도형 삽입 for background
+        shapes = slide.shapes
+        left = top = Inches(1)
+        width = Inches(8)
+        height = Inches(5.5)
+        shape = shapes.add_shape(MSO_SHAPE.RECTANGLE, left, top, width, height) # ppt 크기 만큼 설정
+
+        # 도형 색 채우기
+        fill = shape.fill
+        fill.solid()
+        # fill.patterned()
+        fill.fore_color.rgb = RGBColor(background_col_rgb[0], background_col_rgb[1], background_col_rgb[2])
+
+        # 텍스트 상자 넣기
         tb = slide.shapes.add_textbox(left, top, width, height)
         tf = tb.text_frame
         tf.text = slide_str[i]
@@ -95,43 +113,53 @@ def make_slide(lyric_str, font_size=30, font_style='함초름돋음'):  # slide_
         tf.paragraphs[0].alignment = PP_ALIGN.CENTER
         tf.paragraphs[0].font.name = font_style
         tf.paragraphs[0].font.size = Pt(font_size)
-
+        #tf.paragraphs[0].font.color.rgb = RGBColor(255, 0, 0)
+        print("font_col_rgb in make_slide :",font_col_rgb)
+        tf.paragraphs[0].font.color.rgb = RGBColor(font_col_rgb[0],font_col_rgb[1],font_col_rgb[2])
         # title = prs.slides[i].shapes.title
         # content = slide.placeholders[0]
         # content.text = slide_str[i]
         # p = title.text_frame.paragraphs[0]
         # run = p.add_run()
 
+
         # title.text_frame.paragraphs[0].font.name = font_style
-        print(tf.text)
-        print("----------------------------")
-        # title.text_frame.paragraphs[1].font.name = font_style #paragraph : 단락/행/엔터기준 구분
-        # title.text_frame.paragraphs[0].font.size = Pt(font_size)
-        # title.text_frame.paragraphs[1].font.size = Pt(font_size)
+    print(tf.text)
+    print("----------------------------")
+    '''
+    print("before prs.save in make_slide")
+    #prs.save('add all slides.pptx')
+    #prs.save('doit.pptx')
+    prs.save('add all slides1.pptx')
+    print("after prs.save in make_slide")
+    '''
 
     prs.save('add all slides1.pptx')
 
-
 # image 저장
 def save_pptx_as_png():
-    Application = win32com.client.Dispatch("PowerPoint.Application")
-    #Application.Visible = False    https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=new27kr&logNo=221020428184
-    Presentation = Application.Presentations.Open(r"C:\Users\김대희\PycharmProjects\pythonProject2\UI\add all slides1.pptx")
 
+    print("start in save_pptx_as_png")
+    Application = win32com.client.Dispatch("PowerPoint.Application")
+    print("before Presentation in save_pptx_as_png")
+
+    Presentation = Application.Presentations.Open(r"C:\Users\김대희\PycharmProjects\pythonProject2 - 복사본\UI\add all slides1.pptx", WithWindow=False) #withwindow : background 실행
+    print("after Presentation in save_pptx_as_png")
+    # 상대 경로로 설정하니 오류가 나네...?
 
     for i in range(slide_num):
-        Presentation.Slides[i].Export(r"C:\Users\김대희\PycharmProjects\pythonProject2\slideImagefolder\pptimage{}.jpg".format(i), "JPG")
+        Presentation.Slides[i].Export(r"C:\Users\김대희\PycharmProjects\pythonProject2 - 복사본\slideImagefolder\pptimage{}.png".format(i), "PNG") # jpg 하니깐 표시가 안 돼.
 
 
     Application.Quit()
-    Presentation = None
+    esentation = None
     Application = None
 
 
-def slide_main(lyric_str,font_size = 30 , font_style = '함초름돋움'):
-    # 폰트 크기, 스타일 입력
-
-    make_slide(lyric_str, font_size, font_style)
+def slide_main(lyric_str, font_style = '함초름돋움', font_size = 30, font_col_rgb=(255,255,255),background_col_rgb = (0,0,0)):
+    print("start in slide_main")
+    make_slide(lyric_str, font_size, font_style, font_col_rgb,background_col_rgb)
+    print("before save_pptx_as_png")
     save_pptx_as_png()
     # png_folder = 'C:/Users/김대희/PycharmProjects/pythonProject2/Slide'
     # pptx_file = 'C:/Users/김대희/PycharmProjects/pythonProject2/Slide/add all slides1.pptx'

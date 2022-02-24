@@ -1,98 +1,75 @@
-import sys
-from PyQt5 import QtCore, QtWidgets
+# https://stackoverflow.com/questions/39819700/replacing-the-existing-mainwindow-with-a-new-window-with-python-pyqt-qt-design
+from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtWidgets import QStackedLayout
+from PyQt5.QtWidgets import QWidget, QApplication
+
+class MyWindow(QMainWindow):
+
+    front_wid = None
+
+    def __init__(self, parent=None):
+        super(MyWindow, self).__init__(parent)
+
+        # MAIN WINDOW size
+        self.setFixedSize(200,200)
+
+        # CENTRAL WIDGET
+        self.central_wid = QWidget()
+        self.layout_for_wids = QStackedLayout()
+
+        # BUTTON TO SWITCH BETWEEN WIDGETS
+        self.btn_switch = QPushButton("Switch")
+        self.btn_switch.clicked.connect(self.switch_wids)
+        self.btn_switch.setFixedSize(50,50)
+        self.btn_switch
+
+        # 2 WIDGETS
+        self.wid1 = QWidget()
+        self.wid1.setStyleSheet("""background: blue;""")
+        self.wid1.setFixedSize(200,200)
+        self.wid1.move(100, 100)
+        self.wid2 = QWidget()
+        self.wid2.setStyleSheet("""background: green;""")
+        self.wid2.setFixedSize(200, 200)
+        self.wid2.move(100, 100)
+
+        # LAYOUT CONTAINER FOR WIDGETS AND BUTTON
+        self.layout_for_wids.addWidget(self.btn_switch)
+        self.layout_for_wids.addWidget(self.wid1)
+        self.layout_for_wids.addWidget(self.wid2)
+
+        # ENTERING LAYOUT
+        self.central_wid.setLayout(self.layout_for_wids)
+
+        # CHOOSE YOUR CENTRAL WIDGET
+        self.setCentralWidget(self.central_wid)
+
+        # WHICH WIDGET IS ON THE FRONT
+        self.front_wid = 1
+
+    def switch_wids(self):
+
+        # LOGIC TO SWITCH
+        if self.front_wid == 1:
+            self.wid1.hide()
+            self.wid2.show()
+            self.front_wid = 2
+        else:
+            self.wid1.show()
+            self.wid2.hide()
+            self.front_wid = 1
 
 
-class MainWindow(QtWidgets.QWidget):
 
-    switch_window = QtCore.pyqtSignal(str)
+if __name__ == "__main__":
+    import sys
 
-    def __init__(self):
-        QtWidgets.QWidget.__init__(self)
-        self.setWindowTitle('Main Window')
+    app = QApplication(sys.argv)
+    app.setApplicationName('MyWindow')
 
-        layout = QtWidgets.QGridLayout()
+    main = MyWindow()
+    main.resize(222, 222)
+    main.show()
 
-        self.line_edit = QtWidgets.QLineEdit()
-        layout.addWidget(self.line_edit)
-
-        self.button = QtWidgets.QPushButton('Switch Window')
-        self.button.clicked.connect(self.switch)
-        layout.addWidget(self.button)
-
-        self.setLayout(layout)
-
-    def switch(self):
-        self.switch_window.emit(self.line_edit.text())
-
-
-class WindowTwo(QtWidgets.QWidget):
-
-    def __init__(self, text):
-        QtWidgets.QWidget.__init__(self)
-        self.setWindowTitle('Window Two')
-
-        layout = QtWidgets.QGridLayout()
-
-        self.label = QtWidgets.QLabel(text)
-        layout.addWidget(self.label)
-
-        self.button = QtWidgets.QPushButton('Close')
-        self.button.clicked.connect(self.close)
-
-        layout.addWidget(self.button)
-
-        self.setLayout(layout)
-
-
-class Login(QtWidgets.QWidget):
-
-    switch_window = QtCore.pyqtSignal()
-
-    def __init__(self):
-        QtWidgets.QWidget.__init__(self)
-        self.setWindowTitle('Login')
-
-        layout = QtWidgets.QGridLayout()
-
-        self.button = QtWidgets.QPushButton('Login')
-        self.button.clicked.connect(self.login)
-
-        layout.addWidget(self.button)
-
-        self.setLayout(layout)
-
-    def login(self):
-        self.switch_window.emit()
-
-
-class Controller:
-
-    def __init__(self):
-        pass
-
-    def show_login(self):
-        self.login = Login()
-        self.login.switch_window.connect(self.show_main)
-        self.login.show()
-
-    def show_main(self):
-        self.window = MainWindow()
-        self.window.switch_window.connect(self.show_window_two)
-        self.login.close()
-        self.window.show()
-
-    def show_window_two(self, text):
-        self.window_two = WindowTwo(text)
-        self.window.close()
-        self.window_two.show()
-
-
-def main():
-    app = QtWidgets.QApplication(sys.argv)
-    controller = Controller()
-    controller.show_login()
     sys.exit(app.exec_())
-
-
-if __name__ == '__main__':
-    main()
