@@ -15,7 +15,7 @@ global got_lyric_str
 
 font_col_rgb = (255,255,255)  # font col rgb 값 : 전역변수,,, font col 선택하기 전에도 값은 있어야 함 = > 전역변수
 background_col_rgb = (0,0,0)
-class MyApp(QWidget):
+class MyApp(QWidget):    #  QWidget vs Qmainwindow
 
     def __init__(self):
         super().__init__()
@@ -211,7 +211,7 @@ class MyApp(QWidget):
         print("after os.remove")
         global got_lyric_str
         got_lyric_str = (self.le.toPlainText()).strip()
-        widget.setCurrentIndex(widget.currentIndex() + 1)
+
         print("font_col_rgb in button1Fucntion",font_col_rgb)
         print("What is type of font_col_rgb",type(font_col_rgb))  ### That is tuple
         font_style = str(self.cb1_font_style.currentText())
@@ -240,6 +240,11 @@ class MyApp(QWidget):
         slide_main(got_lyric_str,font_style,font_size,font_col_rgb,background_col_rgb)
         print("ppt 생성 완료되었습니다")
 
+        myApp2 = MyApp2()
+        widget.addWidget(myApp2)
+
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
     def button2Function(self):
         self.le.clear()
         global pptimage_num
@@ -265,8 +270,8 @@ class MyApp2(QWidget):
         #self.setGeometry(0,0, 800, 400)
         #self.setFixedSize(800,600) # it works that changing widget size
 
-        widget.setFixedWidth(2000)   # 생성 될 때는 두번 째 widget이 이 크기로 설정이 되나
-        widget.setFixedHeight(600)   # 실행 된 이후로는 처음 widget에서 변함이 없음
+        widget.setFixedWidth(600)   # 생성 될 때는 두번 째 widget이 이 크기로 설정이 되나
+        widget.setFixedHeight(500)   # 실행 된 이후로는 처음 widget에서 변함이 없음
 
         # combo label group
         self.lbl1_font_style = QLabel('글꼴')
@@ -410,12 +415,12 @@ class MyApp2(QWidget):
         global background_col_rgb
         background_col_rgb = ImageColor.getcolor(hex, "RGB")
 
-    def btn1Function(self):
+    def btn1Function(self): # 뒤로가기
 
         widget.setCurrentIndex(widget.currentIndex() - 1)
 
 
-    def btn2Function(self):
+    def btn2Function(self): # 재생성 하기
         # 이미지 삭제(현 imageViewer 에 있는 값 삭제 후 다시 생성)
         i = 0
         while(True):
@@ -442,9 +447,10 @@ class MyApp2(QWidget):
                 slide_main(got_lyric_str,'함초름돋움',font_size,font_col_rgb)
             else:
                 slide_main(got_lyric_str,font_style,font_size,font_col_rgb)
+        widget.repaint()   # 안 됨
+        print("after widget.repaint")
 
-
-    def btn3Function(self):
+    def btn3Function(self): # 이대로 하기
         #widget.close()
         global image_num
         image_num = image_num+ 1
@@ -474,19 +480,23 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
 
     # 화면 전환용 Widget 설정
+    global widget
     widget = QtWidgets.QStackedWidget()
 
     # 레이아웃 인스턴스 생성
     myApp = MyApp()
-    myApp2 = MyApp2()
+    #myApp2 = MyApp2()
 
     # Widget 추가
     widget.addWidget(myApp)
-    widget.addWidget(myApp2)
+    #widget.addWidget(myApp2)
+    widget.show()
+
+    #widget.addWidget(myApp2)   # 언제 show 하든 상관없이 이미 2번째 widget이 생성되어 버려
     #widget.setFixedWidth(400)
     #widget.setFixedHeight(400)
     #widget.resize(600, 400)
-    widget.show()
+
 
     ex = MyApp()
     sys.exit(app.exec_())
