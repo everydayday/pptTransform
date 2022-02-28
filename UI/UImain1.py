@@ -1,8 +1,9 @@
+import shutil
 import sys
 import os
 from PyQt5.QtWidgets import *
 from PyQt5 import QtWidgets
-
+import time
 
 from pptx.util import Pt
 from PyQt5 import QtGui
@@ -10,6 +11,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from Slide.slidemain import slide_main # ppt 생성 이미지 만듬
 from PIL import ImageColor
+
 global got_lyric_str
 
 
@@ -171,6 +173,7 @@ class MyApp(QWidget):    #  QWidget vs Qmainwindow
         self.layout.addWidget(self.le)
         self.layout.addWidget(self.btn_group)
 
+        #self.layout.removeWidget()
         self.setLayout(self.layout)
 
         #self.show()
@@ -194,9 +197,9 @@ class MyApp(QWidget):    #  QWidget vs Qmainwindow
     def button1Function(self) :
         print(self.le.toPlainText())
         # 기존에 남아있던 이미지 파일 삭제
-        os.remove("..\slideImagefolder\pptimage0.png")
-
-
+        #os.remove("..\slideImagefolder\pptimage0.png")
+        shutil.rmtree("..\slideImagefolder")
+        os.mkdir("..\slideImagefolder")
 
 
         '''while (True):
@@ -254,6 +257,7 @@ class MyApp(QWidget):    #  QWidget vs Qmainwindow
 
 
 image_num = 0
+# 두번째 widget
 class MyApp2(QWidget):
     def __init__(self):
         super().__init__()
@@ -393,10 +397,11 @@ class MyApp2(QWidget):
         self.layout.addWidget(self.btn_group)
 
 
+
         self.setLayout(self.layout)
 
-        #widget.repaint()
-        widget.show()
+        # widget.repaint()
+        #widget.show() # 이거 왜 있지 .. 없어도 큰 문제 없긴 함.
         #self.show()
 
     def showDialog_font(self):  # color dialog 표시
@@ -422,7 +427,7 @@ class MyApp2(QWidget):
 
     def btn2Function(self): # 재생성 하기
         # 이미지 삭제(현 imageViewer 에 있는 값 삭제 후 다시 생성)
-        i = 0
+        '''i = 0
         while(True):
             try:
                 os.remove("..\slideImagefolder\pptimage{}.jpg".format(i))
@@ -430,7 +435,10 @@ class MyApp2(QWidget):
                 i += 1
             except:
                 break
+        '''
 
+        shutil.rmtree("..\slideImagefolder")
+        os.mkdir("..\slideImagefolder")
         print(got_lyric_str)
         font_style = str(self.cb1_font_style.currentText()) # default 값 선택해도 오류나지 않음
         try:        # label 값 선택시 default 값으로
@@ -447,7 +455,28 @@ class MyApp2(QWidget):
                 slide_main(got_lyric_str,'함초름돋움',font_size,font_col_rgb)
             else:
                 slide_main(got_lyric_str,font_style,font_size,font_col_rgb)
-        widget.repaint()   # 안 됨
+
+        # img 재지정
+        # 2. --- img 그룹 ---
+        global image_num
+        pixmap = QPixmap('..\slideImagefolder\pptimage{}.png'.format(image_num))
+        lbl_img = QLabel()
+        lbl_img.setPixmap(pixmap)
+
+        self.layout.removeWidget(self.lbl_img)
+        self.lbl_img.deleteLater()
+        self.lbl_img = None
+        widget.repaint()
+        #widget.repaint()   # 안 됨
+        #widget.quit()  안 먹히는 명령어(존재하지 않는 명령어)
+        # widget.show() 안 됨
+        #widget.update() 안 됨
+        widget.activateWindow()
+        #widget.
+        '''widget.setCurrentIndex(widget.currentIndex()-1) # setCurrentIndex는 잠깐 왔다갔다 할 용도는 안 되는 듯.
+        time.sleep(3)  # 창의 전환 확인하기 위해 멈춤          # 말 그대로 고정용
+        widget.setCurrentIndex(widget.currentIndex()+1)''' # 이전으로 전환은 되지만 갔다 왔다는 안 먹힘
+
         print("after widget.repaint")
 
     def btn3Function(self): # 이대로 하기
@@ -464,8 +493,7 @@ class MyApp2(QWidget):
     widget = QtWidgets.QStackedWidget()
 
     # 레이아웃 인스턴스 생성
-    myApp = MyApp()
-    myApp2 = MyApp2()
+    myApp = MyApp()ㅇ    myApp2 = MyApp2()
 
     # Widget 추가
     widget.addWidget(myApp)
