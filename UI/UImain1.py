@@ -97,6 +97,7 @@ class MyApp(QWidget):    #  QWidget vs Qmainwindow
         cb2_font_size_list = ['8','9','10','10.5','11','12','14','16','18','20','24','28','32','36','40','44','48']
         self.cb2_font_size.addItems(cb2_font_size_list)
         self.cb2_font_size.setCurrentIndex(12)
+
         # color palette
         pal = self.cb2_font_size.palette()
         pal.setColor(QtGui.QPalette.Button, QtGui.QColor(255, 255, 255))
@@ -107,7 +108,6 @@ class MyApp(QWidget):    #  QWidget vs Qmainwindow
         self.pbar = QProgressBar(self)
 
         # 색상 표 생성
-
         self.cb3_font_col = QPushButton('클릭하여 변경', self)
         #self.cb3_font_col = QPushButton()
         self.cb3_font_col.setStyleSheet("background-color: rgb(255,255,255)")
@@ -194,24 +194,14 @@ class MyApp(QWidget):    #  QWidget vs Qmainwindow
         global background_col_rgb
         background_col_rgb = ImageColor.getcolor(hex, "RGB")
 
-    def button1Function(self) :
+    def button1Function(self) :  # 미리보기
         print(self.le.toPlainText())
         # 기존에 남아있던 이미지 파일 삭제
         #os.remove("..\slideImagefolder\pptimage0.png")
         shutil.rmtree("..\slideImagefolder")
         os.mkdir("..\slideImagefolder")
-
-
-        '''while (True):
-            try:
-                os.remove("..\slideImagefolder\pptimage{}.png".format(i))
-                print("in while", i)
-                i += 1
-            except:
-                print("in except")
-                break'''
-
         print("after os.remove")
+
         global got_lyric_str
         got_lyric_str = (self.le.toPlainText()).strip()
 
@@ -220,21 +210,7 @@ class MyApp(QWidget):    #  QWidget vs Qmainwindow
         font_style = str(self.cb1_font_style.currentText())
         font_size = int(self.cb2_font_size.currentText())
         print("ppt 생성 중 입니다.")
-        ''' default 값 지정으로 필요 없어짐
-        try:        # label 값 선택시 default 값으로
-            font_size = int(self.cb2_font_size.currentText()) # int(글꼴) 오류나나 나지 않나 판단
-        except:
-            if font_style == '글꼴':
-                print("in except",font_col_rgb)
-                slide_main(got_lyric_str,'함초름돋움',30,font_col_rgb)
-            else :
-                slide_main(got_lyric_str,font_style,30,font_col_rgb)
-        else:
-            if font_style == '글꼴' :
-                slide_main(got_lyric_str,'함초름돋움',font_size,font_col_rgb)
-            else:
-                slide_main(got_lyric_str,font_style,font_size,font_col_rgb)
-        '''
+
         # https://stackoverflow.com/questions/40519375/what-does-x-is-used-prior-to-global-declaration-mean-python-2
         font_col_rgb
         print("after font_col_rgb in button1")
@@ -243,17 +219,18 @@ class MyApp(QWidget):    #  QWidget vs Qmainwindow
         slide_main(got_lyric_str,font_style,font_size,font_col_rgb,background_col_rgb)
         print("ppt 생성 완료되었습니다")
 
-        myApp2 = MyApp2()
+        myApp2 = MyApp2()     # 이것 때문에 2번째 위젯에서 만든 ppt img가 반영되엇나봐
         widget.addWidget(myApp2)
 
         widget.setCurrentIndex(widget.currentIndex() + 1)
 
-    def button2Function(self):
+    def button2Function(self): # 초기화
         self.le.clear()
         global pptimage_num
         pptimage_num += 1
         print(pptimage_num)
-        self.repaint()
+        self.cb3_font_col.setStyleSheet("background-color: rgb(0,0,0)")   # 이것만 있어도 update 반영됨.
+        #self.repaint()
 
 
 image_num = 0
@@ -354,8 +331,8 @@ class MyApp2(QWidget):
 
         pixmap = QPixmap('..\slideImagefolder\pptimage{}.png'.format(image_num))
 
-        lbl_img = QLabel()
-        lbl_img.setPixmap(pixmap)
+        self.lbl_img = QLabel()
+        self.lbl_img.setPixmap(pixmap)
 
 
         '''self.lbl_img = QLabel(self)
@@ -391,7 +368,7 @@ class MyApp2(QWidget):
         self.layout.addWidget(self.cb_lbl_group)
         self.layout.addWidget(self.cb_group)
         #self.layout.addWidget(self.lk_lbl)
-        self.layout.addWidget(lbl_img)
+        self.layout.addWidget(self.lbl_img)
         #self.layout.addWidget(self.lbl_img)
         # self.layout.addWidget(self.lbl_titlea)
         self.layout.addWidget(self.btn_group)
@@ -414,7 +391,6 @@ class MyApp2(QWidget):
 
     def showDialog_background(self):  # color dialog 표시
         col = QColorDialog.getColor()
-
         hex = col.name()
 
         global background_col_rgb
@@ -441,38 +417,30 @@ class MyApp2(QWidget):
         os.mkdir("..\slideImagefolder")
         print(got_lyric_str)
         font_style = str(self.cb1_font_style.currentText()) # default 값 선택해도 오류나지 않음
-        try:        # label 값 선택시 default 값으로
-            print(font_style)
-            font_size = int(self.cb2_font_size.currentText()) # int(글꼴) 오류나나 나지 않나 판단
+        font_size = int(self.cb2_font_size.currentText())
 
-        except:
-            if font_style == '글꼴':
-                slide_main(got_lyric_str,'함초름돋움',30,font_col_rgb)
-            else :
-                slide_main(got_lyric_str,font_style,30,font_col_rgb)
-        else:
-            if font_style == '글꼴':
-                slide_main(got_lyric_str,'함초름돋움',font_size,font_col_rgb)
-            else:
-                slide_main(got_lyric_str,font_style,font_size,font_col_rgb)
+        slide_main(got_lyric_str, font_style, font_size, font_col_rgb, background_col_rgb)
 
         # img 재지정
         # 2. --- img 그룹 ---
         global image_num
+        print("global image_num", image_num)
         pixmap = QPixmap('..\slideImagefolder\pptimage{}.png'.format(image_num))
-        lbl_img = QLabel()
-        lbl_img.setPixmap(pixmap)
+        self.lbl_img.setPixmap(pixmap)
 
-        self.layout.removeWidget(self.lbl_img)
+        #self.setLayout(self.layout)
+
+        '''self.layout.removeWidget(self.lbl_img)
         self.lbl_img.deleteLater()
         self.lbl_img = None
-        widget.repaint()
+        widget.repaint()'''
+
         #widget.repaint()   # 안 됨
         #widget.quit()  안 먹히는 명령어(존재하지 않는 명령어)
         # widget.show() 안 됨
         #widget.update() 안 됨
+
         widget.activateWindow()
-        #widget.
         '''widget.setCurrentIndex(widget.currentIndex()-1) # setCurrentIndex는 잠깐 왔다갔다 할 용도는 안 되는 듯.
         time.sleep(3)  # 창의 전환 확인하기 위해 멈춤          # 말 그대로 고정용
         widget.setCurrentIndex(widget.currentIndex()+1)''' # 이전으로 전환은 되지만 갔다 왔다는 안 먹힘
