@@ -68,6 +68,8 @@ def make_slide(lyric_str, font_size=30, font_style='함초름돋음',font_col_rg
     # 파워포인트 객체 선언                                                       # font_col_rgb : tuple 로 넘겨줌
     print("start in make_slide")
     prs = Presentation()
+    prs.slide_width = Inches(16)
+    prs.slide_height = Inches(9)
     # slide 마다 가사 리스트
     slide_str = get_slide_str(lyric_str)
     # slide 갯수 구하기 (올림)
@@ -85,11 +87,6 @@ def make_slide(lyric_str, font_size=30, font_style='함초름돋음',font_col_rg
         width = Cm(25.4)
         height = Cm(19)
 
-        # case 2
-        '''left = Cm(0)
-        top = Cm(2.89)
-        width = Cm(25.4)
-        height = Cm(6.63)'''
 
         # https://vincinotes.com/%ED%8C%8C%EC%9D%B4%EC%8D%AC-%ED%8C%8C%EC%9B%8C%ED%8F%AC%EC%9D%B8%ED%8A%B8-%EC%9E%90%EB%8F%99%ED%99%94-python-pptx-%EB%A7%8C%EB%93%A4%EA%B8%B0/
         # 도형 삽입 for background

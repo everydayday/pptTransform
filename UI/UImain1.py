@@ -39,9 +39,11 @@ class MyApp(QWidget):    #  QWidget vs Qmainwindow
         #self.resize(100, 100)
         self.move(300, 300)
 
-        widget.setFixedWidth(600)
+        '''widget.setFixedWidth(600)
         widget.setFixedHeight(500)
+        '''
 
+        widget.resize(600, 500)
 
 
 
@@ -88,6 +90,8 @@ class MyApp(QWidget):    #  QWidget vs Qmainwindow
 
         # combobox
         self.cb1_font_style = QComboBox()
+
+
         cb1_font_style_list = ['굴림', '굴림체', '궁서', '궁서체',  '돋음', '돋음체', '바탕','바탕체']
         self.cb1_font_style.addItems(cb1_font_style_list)
         self.cb1_font_style.setCurrentIndex(4)
@@ -108,12 +112,12 @@ class MyApp(QWidget):    #  QWidget vs Qmainwindow
         self.pbar = QProgressBar(self)
 
         # 색상 표 생성
-        self.cb3_font_col = QPushButton('클릭하여 변경', self)
+        self.cb3_font_col = QPushButton('클릭하여 변경', self)   # font color
         #self.cb3_font_col = QPushButton()
         self.cb3_font_col.setStyleSheet("background-color: rgb(255,255,255)")
         self.cb3_font_col.clicked.connect(self.showDialog_font)  # 어느 함수에서 주었는지 구분해주는 인자
 
-        self.cb4_font_col = QPushButton('클릭하여 변경',self)
+        self.cb4_font_col = QPushButton('클릭하여 변경',self)  # background color
         self.cb4_font_col.setStyleSheet("background-color: rgb(0,0,0)")
         self.cb4_font_col.clicked.connect(self.showDialog_background)
 
@@ -150,15 +154,15 @@ class MyApp(QWidget):    #  QWidget vs Qmainwindow
         self.btn_group_layout.addWidget(self.btn2)
         self.btn_group.setLayout(self.btn_group_layout)
 
+        # loading layout
+        self.loading_lbl = QLabel()
 
-        # ------img
-        global pptimage_num
-        pptimage_num = 0
-        pixmap = QPixmap('pptimage{}.png'.format(pptimage_num))
 
-        lbl_img = QLabel()
-        lbl_img.setPixmap(pixmap)
+        # gif test
+        pixmap = QPixmap('loading.gif')
 
+        self.lbl_gif = QLabel()
+        self.lbl_gif.setPixmap(pixmap)
 
         ##  -------------layout--------------
         self.layout = QVBoxLayout()
@@ -171,14 +175,16 @@ class MyApp(QWidget):    #  QWidget vs Qmainwindow
         self.layout.addWidget(self.cb_group)
         self.layout.addWidget(self.lbl_paragraph)
         self.layout.addWidget(self.le)
+
         self.layout.addWidget(self.btn_group)
+        self.layout.addWidget(self.loading_lbl)
 
         #self.layout.removeWidget()
         self.setLayout(self.layout)
 
         #self.show()
 
-    def showDialog_font(self): #color dialog 표시
+    def showDialog_font(self): # font color
         col = QColorDialog.getColor()
 
         hex = col.name()
@@ -186,13 +192,17 @@ class MyApp(QWidget):    #  QWidget vs Qmainwindow
         global font_col_rgb
         font_col_rgb = ImageColor.getcolor(hex, "RGB")
 
-    def showDialog_background(self): #color dialog 표시
+        self.cb3_font_col.setStyleSheet("background-color: rgb{}".format(font_col_rgb))
+
+    def showDialog_background(self): # background color
         col = QColorDialog.getColor()
 
         hex = col.name()
 
         global background_col_rgb
         background_col_rgb = ImageColor.getcolor(hex, "RGB")
+
+        self.cb4_font_col.setStyleSheet("background-color: rgb{}".format(background_col_rgb))
 
     def button1Function(self) :  # 미리보기
         print(self.le.toPlainText())
@@ -212,17 +222,29 @@ class MyApp(QWidget):    #  QWidget vs Qmainwindow
         print("ppt 생성 중 입니다.")
 
         # https://stackoverflow.com/questions/40519375/what-does-x-is-used-prior-to-global-declaration-mean-python-2
-        font_col_rgb
+        #font_col_rgb  없어도 되지?
         print("after font_col_rgb in button1")
         global background_col_rgb
         print("after background_col_rgb")
+
+        # 로딩 부분
+        #self.loading_lbl.setText("로딩중입니다.") # 뒤로가기 해서 보면 나타나 있음.
+        #self.loading_lbl = QLabel("로딩 중입니다.") #  새 창 넘어간 후 뒤로가기에서 봐도 새로운 거 없음
+
+        #self.layout.addWidget(self.loading_lbl)
+
+        print("after loading try")
+
+        # ppt 생성
         slide_main(got_lyric_str,font_style,font_size,font_col_rgb,background_col_rgb)
         print("ppt 생성 완료되었습니다")
 
+
+        # 두번째 창
         myApp2 = MyApp2()     # 이것 때문에 2번째 위젯에서 만든 ppt img가 반영되엇나봐
         widget.addWidget(myApp2)
-
         widget.setCurrentIndex(widget.currentIndex() + 1)
+
 
     def button2Function(self): # 초기화
         self.le.clear()
@@ -251,8 +273,7 @@ class MyApp2(QWidget):
         #self.setGeometry(0,0, 800, 400)
         #self.setFixedSize(800,600) # it works that changing widget size
 
-        widget.setFixedWidth(600)   # 생성 될 때는 두번 째 widget이 이 크기로 설정이 되나
-        widget.setFixedHeight(500)   # 실행 된 이후로는 처음 widget에서 변함이 없음
+        widget.resize(600,500)   # 생성 될 때는 두번 째 widget이 이 크기로 설정이 되나
 
         # combo label group
         self.lbl1_font_style = QLabel('글꼴')
@@ -333,6 +354,8 @@ class MyApp2(QWidget):
 
         self.lbl_img = QLabel()
         self.lbl_img.setPixmap(pixmap)
+        #self.lbl_img.setFixedSize(600,200)
+        #self.lbl_img.adjustSize(600,200) # 아예 오류 남
 
 
         '''self.lbl_img = QLabel(self)
@@ -381,21 +404,25 @@ class MyApp2(QWidget):
         #widget.show() # 이거 왜 있지 .. 없어도 큰 문제 없긴 함.
         #self.show()
 
-    def showDialog_font(self):  # color dialog 표시
+    def showDialog_font(self):  # font color
         col = QColorDialog.getColor()
 
         hex = col.name()
 
         global font_col_rgb
         font_col_rgb = ImageColor.getcolor(hex, "RGB")
+        # 선택 시 색깔 바꾸기
+        self.cb3_font_col.setStyleSheet("background-color: rgb{}".format(font_col_rgb))
 
-    def showDialog_background(self):  # color dialog 표시
+    def showDialog_background(self):  # background color
         col = QColorDialog.getColor()
         hex = col.name()
 
         global background_col_rgb
         background_col_rgb = ImageColor.getcolor(hex, "RGB")
-
+        print("background_col :",background_col_rgb)
+        # 선택 시 색깔 바꾸기
+        self.cb4_background_color.setStyleSheet("background-color: rgb{}".format(background_col_rgb))
     def btn1Function(self): # 뒤로가기
 
         widget.setCurrentIndex(widget.currentIndex() - 1)
@@ -403,16 +430,6 @@ class MyApp2(QWidget):
 
     def btn2Function(self): # 재생성 하기
         # 이미지 삭제(현 imageViewer 에 있는 값 삭제 후 다시 생성)
-        '''i = 0
-        while(True):
-            try:
-                os.remove("..\slideImagefolder\pptimage{}.jpg".format(i))
-                print("this is i",i)
-                i += 1
-            except:
-                break
-        '''
-
         shutil.rmtree("..\slideImagefolder")
         os.mkdir("..\slideImagefolder")
         print(got_lyric_str)
@@ -428,31 +445,13 @@ class MyApp2(QWidget):
         pixmap = QPixmap('..\slideImagefolder\pptimage{}.png'.format(image_num))
         self.lbl_img.setPixmap(pixmap)
 
-        #self.setLayout(self.layout)
-
-        '''self.layout.removeWidget(self.lbl_img)
-        self.lbl_img.deleteLater()
-        self.lbl_img = None
-        widget.repaint()'''
-
-        #widget.repaint()   # 안 됨
-        #widget.quit()  안 먹히는 명령어(존재하지 않는 명령어)
-        # widget.show() 안 됨
-        #widget.update() 안 됨
-
-        widget.activateWindow()
-        '''widget.setCurrentIndex(widget.currentIndex()-1) # setCurrentIndex는 잠깐 왔다갔다 할 용도는 안 되는 듯.
-        time.sleep(3)  # 창의 전환 확인하기 위해 멈춤          # 말 그대로 고정용
-        widget.setCurrentIndex(widget.currentIndex()+1)''' # 이전으로 전환은 되지만 갔다 왔다는 안 먹힘
-
         print("after widget.repaint")
 
     def btn3Function(self): # 이대로 하기
-        #widget.close()
         global image_num
         image_num = image_num+ 1
         print("image_num in btn3Function :",image_num)
-        self.repaint()
+
 
 '''def main(): # 필요 없는 부분인 듯
     app = QApplication(sys.argv)
